@@ -56,6 +56,8 @@ jobs:
         echo "::set-env name=DEVICE::$(echo $DEVICE)"
         echo "::set-env name=ANDROID_ROOT::$(echo $ANDROID_ROOT)"
         echo "::set-env name=FLASHABLE_DIR::$(echo $FLASHABLE_DIR)"
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
 
     - name: Downloading source code
       run: |
@@ -74,6 +76,8 @@ jobs:
         git clone https://github.com/ubports-on-davinci/android_kernel_xiaomi_sm6150_fork.git $ANDROID_ROOT/kernel/xiaomi/davinci --depth=1
         rm -rf $ANDROID_ROOT/hybris/hybris-boot
         git clone https://github.com/sailfish-on-davinci/hybris-boot.git $ANDROID_ROOT/hybris/hybris-boot
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
 
     - name: Build HAL
       run: |
@@ -93,6 +97,8 @@ jobs:
       uses: actions/create-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.MyUbtSecret }}
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+
       with:
         tag_name: ${{ github.ref }}
         release_name: Release ${{ github.ref }}
@@ -104,6 +110,7 @@ jobs:
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.MyUbtSecret }}
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
         asset_path: /home/runner/work/${{env.FLASHABLE_DIR}}.zip
